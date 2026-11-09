@@ -1,10 +1,10 @@
 """Flux de données de l'arène CryptoO2.
 
-Récupère les bougies 1h et 4h puis les écrit en JSON dans data/ :
+Récupère les bougies journalières, 4h, 1h et 15 min puis les écrit en JSON dans data/ :
   - BTC, ETH, BNB           -> API publique Binance
   - USDT.D, TOTAL3ES        -> flux de graphiques TradingView (symboles CRYPTOCAP)
 
-Lancé toutes les heures par .github/workflows/data.yml.
+Lancé toutes les 4 heures par .github/workflows/data.yml.
 Le flux TradingView est celui qu'utilise leur site ; ce n'est pas une API officielle.
 """
 import json, os, random, re, string, time, urllib.request
@@ -14,7 +14,7 @@ OUT = "data"
 BARS = 300
 BINANCE = {"BTC": "BTCUSDT", "ETH": "ETHUSDT", "BNB": "BNBUSDT"}
 TRADINGVIEW = {"USDT.D": "CRYPTOCAP:USDT.D", "TOTAL3ES": "CRYPTOCAP:TOTAL3ES"}
-TIMEFRAMES = {"1h": "60", "4h": "240"}
+TIMEFRAMES = {"1d": "1D", "4h": "240", "1h": "60", "15m": "15"}  # nom Binance -> code TradingView
 
 
 def binance(symbol, tf):

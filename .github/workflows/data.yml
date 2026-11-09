@@ -3,7 +3,7 @@ name: Flux de données CryptoO2
 
 on:
   schedule:
-    - cron: "7 * * * *"   # toutes les heures, à la minute 7
+    - cron: "7 */4 * * *"   # 7 minutes après chaque clôture de bougie 4h (00h07, 04h07… UTC)
   workflow_dispatch:        # et à la demande, depuis l'onglet Actions
 
 permissions:
@@ -13,8 +13,8 @@ jobs:
   fetch:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
       - run: pip install websocket-client
@@ -25,6 +25,6 @@ jobs:
         run: |
           git config user.name "cryptoo2-data"
           git config user.email "actions@users.noreply.github.com"
-          git add data
+          git add -A data 2>/dev/null || exit 0
           git diff --cached --quiet || git commit -m "Données $(date -u +%Y-%m-%dT%H:%MZ)"
           git push
